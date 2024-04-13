@@ -1,8 +1,9 @@
 <?php
 session_start();
-
+// Подключаемся к БД
 include "PHP_scripts/connDB.php";
 
+// Проверка отправки формы
 if ($_SERVER['REQUEST_METHOD'] === "POST") {
   try {
     $sql = ("DELETE FROM users");

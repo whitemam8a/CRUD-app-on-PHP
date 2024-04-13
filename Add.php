@@ -1,5 +1,7 @@
 <?php
 session_start();
+
+// Подключаемся к БД
 include "PHP_scripts/connDB.php";
 
 // функция преобразовывает name и secondname
@@ -27,7 +29,7 @@ function checkIsikukood($isikukood)
   }
 }
 
-
+// создаем пустой ассоциативный массив куда мы будем складывать оишбки при неправильно заполненой форме
 $err = array_fill_keys(['second_name', 'first_name', 'isikukood', 'grade', 'email', 'general'], '');
 
 // Проверка отправки формы
@@ -41,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
 
   // Проверяем все переменные на наличие значений
   if (empty($SecondName) || empty($FirstName) || empty($isikukood) || empty($grade) || empty($email)) {
-    // Если хотя бы одно из обязательных полей не заполнено, выводим сообщение об ошибке 
+    // Если хотя бы одно из обязательных полей не заполнено, выводим сообщение для всех полей об ошибке 
     $err['second_name'] = 'Заполните поле с фамилией';
     $err['first_name'] = 'Заполните поле с именем';
     $err['isikukood'] = 'Заполните поле с личным кодом';
@@ -69,6 +71,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
       // Сохраняем сообщение об успешном добавлении в сессию
       $_SESSION['success_message'] = "$full_name успешно добавлен в базу данных!";
       header("Location: " . $_SERVER['HTTP_REFERER']);
+      exit();
     }
   }
 }

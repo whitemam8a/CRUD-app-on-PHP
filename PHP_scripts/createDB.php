@@ -1,7 +1,7 @@
 <?php
 include "connDB.php";
 
-
+// Создаем БД
 $sql_create_db = "CREATE DATABASE Web_Programming";
 if ($pdo->exec($sql_create_db) !== false) {
   echo "База данных успешно создана<br>";
@@ -11,6 +11,7 @@ if ($pdo->exec($sql_create_db) !== false) {
 
 $pdo->exec("USE Web_Programming");
 
+// Создаем таблицу в БД
 $sql_file = file_get_contents('../SQL/students.sql');
 if ($pdo->exec($sql_file) !== false) {
   echo "Таблица успешно создана из файла students.sql<br>";
