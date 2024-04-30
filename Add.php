@@ -29,8 +29,6 @@ function checkIsikukood($isikukood)
   }
 }
 
-// создаем пустой ассоциативный массив куда мы будем складывать оишбки при неправильно заполненой форме
-$err = array_fill_keys(['second_name', 'first_name', 'isikukood', 'grade', 'email', 'general'], '');
 
 // Проверка отправки формы
 if ($_SERVER['REQUEST_METHOD'] === "POST") {
@@ -41,20 +39,35 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
   $email = $_POST['email'];
   $message = $_POST['message'];
 
-  // Проверяем все переменные на наличие значений
-  if (empty($SecondName) || empty($FirstName) || empty($isikukood) || empty($grade) || empty($email)) {
-    // Если хотя бы одно из обязательных полей не заполнено, выводим сообщение для всех полей об ошибке 
+  $err = [];
+
+  if (empty($SecondName)) {
     $err['second_name'] = 'Заполните поле с фамилией';
+    $err['general'] = 'Все поля должны быть заполнены!';
+  }
+  if (empty($FirstName)) {
     $err['first_name'] = 'Заполните поле с именем';
+    $err['general'] = 'Все поля должны быть заполнены!';
+  }
+  if (empty($isikukood)) {
     $err['isikukood'] = 'Заполните поле с личным кодом';
+    $err['general'] = 'Все поля должны быть заполнены!';
+  }
+  if (empty($grade)) {
     $err['grade'] = 'Заполните поле на каком курсе вы находитесь';
+    $err['general'] = 'Все поля должны быть заполнены!';
+  }
+  if (empty($email)) {
     $err['email'] = 'Заполните поле с email';
     $err['general'] = 'Все поля должны быть заполнены!';
-  } else {
+  }
 
+  if (!empty($err)) {
+    $err['general'] = 'Все поля должны быть заполнены!';
+  } else {
     // Валидация isikukood
     if (!checkIsikukood($isikukood)) {
-      $err['isikukood'] = 'Введене некоректный isikukood';
+      $err['isikukood'] = 'Введен некоректный isikukood';
     }
 
     // Валидация email 
@@ -63,7 +76,9 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
     }
 
     // Если нет ошибок в валидации, добавляем данные в базу данных
-    else {
+    if (!empty($err)) {
+      // $err['general'] = 'Все поля должны быть заполнены!';
+    } else {
       $sql = ("INSERT INTO users (SecondName, FirstName, isikukood, grade, email, message) values (?,?,?,?,?,?)");
       $query = $pdo->prepare($sql);
       $query->execute([$SecondName, $FirstName, $isikukood, $grade, $email, $message]);
@@ -92,7 +107,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
 <body>
   <nav class="navbar navbar-expand-lg bg-body-tertiary">
     <div class="container-fluid">
-      <a class="navbar-brand" href="main.php">Итоговое задание SQL & PHP</a>
+      <a class="navbar-brand" href="index.php">Итоговое задание SQL & PHP</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -117,28 +132,28 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
     <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST">
       <div class="form-group">
         <small>Second name</small>
-        <input type="text" class="form-control" name="second_name" value="" placeholder="Обязательное поле">
-        <small class="text-danger"><?php echo $err['second_name'] ?></small>
+        <input type="text" class="form-control" name="second_name" value="<?php echo isset($_POST['second_name']) ? $_POST['second_name'] : ''; ?>" placeholder="Обязательное поле">
+        <small class="text-danger"><?php echo isset($err['second_name']) ? $err['second_name'] : ''; ?></small>
       </div>
-      <div class=" form-group">
+      <div class="form-group">
         <small>First name</small>
-        <input type="text" class="form-control" name="first_name" placeholder="Обязательное поле">
-        <small class="text-danger"><?php echo $err['first_name'] ?></small>
+        <input type="text" class="form-control" name="first_name" value="<?php echo isset($_POST['first_name']) ? $_POST['first_name'] : ''; ?>" placeholder="Обязательное поле">
+        <small class="text-danger"><?php echo isset($err['first_name']) ? $err['first_name'] : ''; ?></small>
       </div>
       <div class="form-group">
         <small>Isikukood</small>
-        <input type="text" class="form-control" name="isikukood" placeholder="Обязательное поле">
-        <small class="text-danger"><?php echo $err['isikukood'] ?></small>
+        <input type="text" class="form-control" name="isikukood" value="<?php echo isset($_POST['isikukood']) ? $_POST['isikukood'] : ''; ?>" placeholder="Обязательное поле">
+        <small class="text-danger"><?php echo isset($err['isikukood']) ? $err['isikukood'] : ''; ?></small>
       </div>
-      <div class=" form-group">
+      <div class="form-group">
         <small>Grade</small>
-        <input type="number" class="form-control" name="grade" placeholder="Обязательное поле">
-        <small class="text-danger"><?php echo $err['grade'] ?></small>
+        <input type="number" class="form-control" name="grade" value="<?php echo isset($_POST['grade']) ? $_POST['grade'] : ''; ?>" placeholder="Обязательное поле">
+        <small class="text-danger"><?php echo isset($err['grade']) ? $err['grade'] : ''; ?></small>
       </div>
       <div class="form-group">
         <small>Email</small>
-        <input type="text" class="form-control" name="email" placeholder="Обязательное поле">
-        <small class="text-danger"><?php echo $err['email'] ?></small>
+        <input type="text" class="form-control" name="email" value="<?php echo isset($_POST['email']) ? $_POST['email'] : ''; ?>" placeholder="Обязательное поле">
+        <small class="text-danger"><?php echo isset($err['email']) ? $err['email'] : ''; ?></small>
       </div>
       <div class="form-group">
         <small>Message</small>
@@ -149,7 +164,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
         <button type="reset" class="btn btn-light">Отмена</button>
       </div>
     </form>
-    <div class="text-danger"><?php echo $err['general'] ?></div>
+    <div class="text-danger"><?php echo isset($err['general']) ? $err['general'] : ''; ?></div>
     <div class="text-success"><?php echo isset($_SESSION['success_message']) ? $_SESSION['success_message'] : ''; ?></div>
   </div>
 
