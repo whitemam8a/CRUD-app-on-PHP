@@ -4,31 +4,55 @@ session_start();
 // Подключаемся к БД
 include "PHP_scripts/connDB.php";
 
-// функция преобразовывает name и secondname
-function formatName($name)
-{
-  $name = ucfirst(strtolower($name));
-  return $name;
-}
-// функция для проверки email 
-function checkEmail($email)
-{
-  if (strpos($email, '@') !== false) {
-    return true;
-  } else {
-    return false;
-  }
-}
-// функция для проверки isikukood 
-function checkIsikukood($isikukood)
-{
-  if (strlen($isikukood) === 11 && ctype_digit($isikukood)) {
-    return true;
-  } else {
-    return false;
-  }
-}
+//Добавляем файл с функциями 
+include "utils.php";
 
+// if ($_SERVER['REQUEST_METHOD'] === "POST") {
+//   $SecondName = formatName($_POST['second_name']);
+//   $FirstName = formatName($_POST['first_name']);
+//   $isikukood = $_POST['isikukood'];
+//   $grade = $_POST['grade'];
+//   $email = $_POST['email'];
+//   $message = $_POST['message'];
+
+//   $err = [];
+
+//   $fields = [
+//     'second_name' => $SecondName,
+//     'first_name' => $FirstName,
+//     'isikukood' => $isikukood,
+//     'grade' => $grade,
+//     'email' => $email,
+//   ];
+
+//   foreach ($fields as $key => $value) {
+//     if (empty($value)) {
+//       $err[$key] = "Заполните поле с {$key}";
+//       $err['general'] = 'Все поля должны быть заполнены!';
+//     }
+//   }
+
+//   // Валидация isikukood
+//   if (!checkIsikukood($isikukood)) {
+//     $err['isikukood'] = 'Введен некорректный isikukood';
+//   }
+
+//   // Валидация email 
+//   if (!checkEmail($email)) {
+//     $err['email'] = 'Введен некорректный email';
+//   }
+
+//   // Проверка на наличие ошибок
+//   if (empty($err)) {
+//     $sql = "INSERT INTO users (SecondName, FirstName, isikukood, grade, email, message) VALUES (?,?,?,?,?,?)";
+//     $query = $pdo->prepare($sql);
+//     $query->execute([$SecondName, $FirstName, $isikukood, $grade, $email, $message]);
+//     $full_name = $SecondName . ' ' . $FirstName;
+//     $_SESSION['success_message'] = "$full_name успешно добавлен в базу данных!";
+//     header("Location: " . $_SERVER['HTTP_REFERER']);
+//     exit();
+//   }
+// }
 
 // Проверка отправки формы
 if ($_SERVER['REQUEST_METHOD'] === "POST") {
@@ -65,6 +89,8 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
   if (!empty($err)) {
     $err['general'] = 'Все поля должны быть заполнены!';
   } else {
+
+
     // Валидация isikukood
     if (!checkIsikukood($isikukood)) {
       $err['isikukood'] = 'Введен некоректный isikukood';

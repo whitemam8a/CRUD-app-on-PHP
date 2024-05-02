@@ -54,7 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
       <p>Вы уверены, что хотите удалить все записи из таблицы?</p>
       <input type="submit" name="delete_all" value="Удалить все записи">
     </form>
-    <p><?php echo isset($_SESSION['success_del']) ? $_SESSION['success_del'] : "" ?></p>
+    <p style="color: red;"><?php echo isset($_SESSION['success_del']) ? $_SESSION['success_del'] : "" ?></p>
 
   </div>
 
