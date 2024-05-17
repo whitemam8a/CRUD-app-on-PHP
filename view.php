@@ -60,7 +60,9 @@ if (isset($_POST['edit-submit'])) {
     }
 
     if (!empty($err)) {
-      // $err['general'] = 'Все поля должны быть заполнены!';
+      $err['general'] = 'Все поля должны быть заполнены!';
+      // header('Location: ' . $_SERVER['HTTP_REFERER']);
+      // exit();
     } else {
       $sql = ("UPDATE users set SecondName=?, FirstName=?, isikukood=?, grade=?, email=?, message=? WHERE id=?");
       $query = $pdo->prepare($sql);
@@ -169,6 +171,7 @@ if (isset($_POST['delete_submit'])) {
                         </div>
                         <div class="form-group mb-3">
                           <input type="text" class="form-control" name="isikukood" value="<?= $row->isikukood ?>" placeholder="Персональный код">
+                          <!-- <small class="text-danger"><?php echo isset($err['isikukood']) ? $err['isikukood'] : ''; ?></small> -->
                         </div>
                         <div class="form-group mb-3">
                           <input type="text" class="form-control" name="grade" value="<?= $row->grade ?>" placeholder="Курс">

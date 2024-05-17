@@ -185,8 +185,8 @@ if ($_SERVER['REQUEST_METHOD'] === "POST") {
         <small>Message</small>
         <input type="text" class="form-control" name="message" placeholder="Не обязательное поле">
       </div>
-      <div class="modal-footer">
-        <button type="submit" class="btn btn-primary">Save</button>
+      <div class="modal-footer  justify-content-center pt-2">
+        <button type="submit" class="btn btn-primary mx-2">Save</button>
         <button type="reset" class="btn btn-light">Отмена</button>
       </div>
     </form>
